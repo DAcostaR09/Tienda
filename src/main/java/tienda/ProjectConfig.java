@@ -24,21 +24,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @Configuration
 public class ProjectConfig implements WebMvcConfigurer {
-    
-    @Value("${firebase.json.path}")
-    private String jsonPath;
- 
-    @Value("${firebase.json.file}")
-    private String jsonFile;
- 
-    @Bean
-    public Storage storage() throws IOException {
-        ClassPathResource resource = new ClassPathResource(jsonPath + File.separator + jsonFile);
-        try (InputStream inputStream = resource.getInputStream()) {
-            GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream);
-            return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        }
-    }
 
     /* Los siguiente métodos son para implementar el tema de seguridad dentro del proyecto */
     @Override
@@ -83,27 +68,29 @@ public class ProjectConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registro) {
         registro.addInterceptor(localeChangeInterceptor());
     }
-
+    
     //Bean para poder acceder a los messages.properties en código...
     @Bean("messageSource")
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("messages");
+        messageSource.setBasename("messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
+    
+    @Value("${firebase.json.path}")
+    private String jsonPath;
+
+    @Value("${firebase.json.file}")
+    private String jsonFile;
+
+    @Bean
+    public Storage storage() throws IOException {
+        ClassPathResource resource = new ClassPathResource(jsonPath + File.separator + jsonFile);
+        try (InputStream inputStream = resource.getInputStream()) {
+            GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream);
+            return StorageOptions.newBuilder().setCredentials(credentials).build().getService();
+        }
+    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
