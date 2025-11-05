@@ -98,7 +98,7 @@ public Storage storage() throws IOException {
     ClassPathResource resource = new ClassPathResource(
         "firebase/tienda-techshop-8b0e7-firebase-adminsdk-fbsvc-b68c83290c.json"
     );
-
+ 
     try (InputStream inputStream = resource.getInputStream()) {
         GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream);
         return StorageOptions.newBuilder()
